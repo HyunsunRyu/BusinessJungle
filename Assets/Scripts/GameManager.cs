@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    private Dictionary<System.Type, IController> controllerDic;
+    private Dictionary<System.Type, IController> controllerDic = new Dictionary<System.Type, IController>();
 
     [SerializeField] private InputController inputController;
     [SerializeField] private PlayerController playerController;
@@ -21,14 +21,14 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        InitController(inputController);
         InitController(playerController);
         InitController(mapController);
+        InitController(inputController);
     }
 
-    private void InitController(IController controller)
+    private void InitController<T>(T controller) where T : IController
     {
-        System.Type type = controllerDic.GetType();
+        System.Type type = controller.GetType();
         if (!controllerDic.ContainsKey(type))
             controllerDic.Add(type, controller);
 

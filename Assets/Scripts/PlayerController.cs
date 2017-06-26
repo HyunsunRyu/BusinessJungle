@@ -1,54 +1,72 @@
-﻿using System;
-using System.Collections;
+﻿using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
 
 public class PlayerController : IController
 {
-    [SerializeField] private PlayerData playerData = new PlayerData();
-    [SerializeField] private PhysicData physicData = new PhysicData();
+    private enum State { OnGround, Jumping, Falling, Attacking }
+    
+    [SerializeField] private Transform body;
+    [SerializeField] private AnimationCurve jumpLineCurve;
+    [SerializeField] private AnimationCurve fallLineCurve;
+    [SerializeField] private float jumpingTime;
+    [SerializeField] private float fallingTime;
+    [SerializeField] private float topLine;
+    [SerializeField] private float bottomLine;
 
-    private Vector2 screenSize;
+    private float deltaTime { get { return TimeManager.Instance.DeltaTime; } }
+
+    private float rate;
+
+    private State state;
 
     public override void Init()
     {
-        playerData.height = 100f;
-        playerData.jumpPower = 100f;
-        playerData.speed = 50f;
-        screenSize = UIManager.Instance.GetScreenSize();
-    }
-    
-    public void Drop()
-    {
+        
     }
 
-    public void Jump()
+    private void Awake()
     {
-        physicData.vel.y += playerData.jumpPower;
-    }
-
-    public void MoveLeft()
-    {
-        physicData.vel.x -= playerData.speed * TimeManager.Instance.DeltaTime;
-    }
-
-    public void MoveRight()
-    {
-        physicData.vel.x += playerData.speed * TimeManager.Instance.DeltaTime;
+        state = State.Falling;
+        rate = 0f;
     }
 
     private void Update()
     {
+        //float value = Time.realtimeSinceStartup - Mathf.FloorToInt(Time.realtimeSinceStartup);
+        //value = Mathf.Abs(value);
+        //Debug.LogError(value + "//" + jumpLineCurve.Evaluate(value));
+
         Move();
-        CheckArea();
     }
 
     private void Move()
     {
-    }
+        float value = 0f;
 
-    private void CheckArea()
-    {
+        if (state == State.Jumping)
+        {
+            rate += Time.deltaTime;
+            if (rate > 1f)
+            {
+                rate = 1f;
+                state = State.Falling;
+            }
+            value = jumpLineCurve.Evaluate(rate);
+        }
+        else if (state == State.Falling)
+        {
+            rate -= Time.deltaTime;
+            if (rate < 0f)
+            {
+                rate = 0f;
+                state = State.Jumping;
+            }
+            value = fallLineCurve.Evaluate(rate);
+        }
+        
+        value = value * (topLine - bottomLine) + bottomLine;
+        Vector3 pos = body.localPosition;
+        pos.y = value;
+        body.localPosition = pos;
     }
 }

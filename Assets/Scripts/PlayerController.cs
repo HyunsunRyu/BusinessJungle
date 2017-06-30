@@ -8,8 +8,11 @@ public class PlayerController : IController
     [SerializeField] private Transform body;
     [SerializeField] private AnimationCurve jumpLineCurve;
     [SerializeField] private AnimationCurve fallLineCurve;
+    [SerializeField] private AnimationCurve attackLineCurve;
     [SerializeField] private float jumpingTime;
     [SerializeField] private float fallingTime;
+    [SerializeField] private float attackingTime;
+    [SerializeField] private float moveSpeed;
     [SerializeField] private float topLine;
     [SerializeField] private float bottomLine;
 
@@ -39,6 +42,32 @@ public class PlayerController : IController
         Move();
     }
 
+    public void MoveLeft()
+    {
+        Vector3 pos = body.localPosition;
+        pos.x -= moveSpeed * deltaTime;
+        body.localPosition = pos;
+    }
+
+    public void MoveRight()
+    {
+        Vector3 pos = body.localPosition;
+        pos.x += moveSpeed * deltaTime;
+        body.localPosition = pos;
+    }
+
+    public void Jump()
+    {
+    }
+
+    public void Attack()
+    {
+        if (state == State.Jumping || state == State.Falling)
+        {
+            state = State.Attacking;
+        }
+    }
+
     private void Move()
     {
         float value = 0f;
@@ -62,6 +91,16 @@ public class PlayerController : IController
                 state = State.Jumping;
             }
             value = fallLineCurve.Evaluate(rate);
+        }
+        else if (state == State.Attacking)
+        {
+            rate -= Time.deltaTime / attackingTime;
+            if (rate < 0f)
+            {
+                rate = 0f;
+                state = State.Jumping;
+            }
+            value = attackLineCurve.Evaluate(rate);
         }
         
         value = value * (topLine - bottomLine) + bottomLine;

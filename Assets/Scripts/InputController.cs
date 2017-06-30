@@ -14,17 +14,17 @@ public class InputController : IController
 
     private void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.Space))
-        //{
-        //    player.Jump();
-        //}
-        //if (Input.GetKey(KeyCode.LeftArrow))
-        //{
-        //    player.MoveLeft();
-        //}
-        //else if (Input.GetKey(KeyCode.RightArrow))
-        //{
-        //    player.MoveRight();
-        //}
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            player.Attack();
+        }
+        if (Input.GetKey(KeyCode.LeftArrow))
+        {
+            player.MoveLeft();
+        }
+        else if (Input.GetKey(KeyCode.RightArrow))
+        {
+            player.MoveRight();
+        }
     }
 }

@@ -45,7 +45,7 @@ public class PlayerController : IController
 
         if (state == State.Jumping)
         {
-            rate += Time.deltaTime;
+            rate += Time.deltaTime / jumpingTime;
             if (rate > 1f)
             {
                 rate = 1f;
@@ -55,7 +55,7 @@ public class PlayerController : IController
         }
         else if (state == State.Falling)
         {
-            rate -= Time.deltaTime;
+            rate -= Time.deltaTime / fallingTime;
             if (rate < 0f)
             {
                 rate = 0f;

@@ -3,26 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIManager : MonoBehaviour
+public class UIManager : IManager<UIManager>
 {
-    public static UIManager Instance;
+    [SerializeField] private Transform uiRoot;
 
     private CanvasScaler canvasScaler;
 
-    private void Awake()
+    protected override void Init()
     {
-        Instance = this;
-
         canvasScaler = GetComponent<CanvasScaler>();
-    }
-
-    private void Start()
-    {
-
     }
 
     public Vector2 GetScreenSize()
     {
         return canvasScaler.referenceResolution;
+    }
+
+    public Transform GetUIRoot()
+    {
+        return uiRoot;
     }
 }

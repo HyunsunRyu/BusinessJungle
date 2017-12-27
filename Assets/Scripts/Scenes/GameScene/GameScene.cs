@@ -4,10 +4,15 @@ using UnityEngine;
 
 public class GameScene : IScene
 {
-    [SerializeField] private GameController gameController;
-    
+    private PlayerController player;
+
     public override void Init()
     {
-        gameController.Init();
+        player = Util.GetResource<PlayerController>("PlayerPfb/Player");
+    }
+
+    public override void OnStart()
+    {
+        player.transform.parent = UIManager.Instance.GetUIRoot();
     }
 }

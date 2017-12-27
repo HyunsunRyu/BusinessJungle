@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Analytics;
 
-public class AnalyticsManager : MonoBehaviour
+public class AnalyticsManager : IManager<AnalyticsManager>
 {
-    private void Awake()
+    protected override void Init()
     {
         AddEvent("GameStart", new Dictionary<string, string>() { { "Time", System.DateTime.Now.ToString() } });
     }

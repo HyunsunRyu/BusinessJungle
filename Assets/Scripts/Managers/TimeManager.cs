@@ -2,15 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TimeManager : MonoBehaviour
+public class TimeManager : IManager<TimeManager>
 {
-    public static TimeManager Instance;
-
     public float DeltaTime { get { return Time.deltaTime; } }
-
-    private void Awake()
+    
+    protected override void Init()
     {
-        Instance = this;
     }
 
     private void Start()
